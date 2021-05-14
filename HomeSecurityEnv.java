@@ -36,16 +36,15 @@ import javax.swing.event.ListSelectionListener;
 public class HomeSecurityEnv extends Environment {
     private Logger logger = Logger.getLogger("homesec.mas2j."+HomeSecurityEnv.class.getName());
 	private HomeSecurityGui gui;
-	private HomeSecurityArch arch;
 	
 	public static String TEXT= "Tresspassing";
     /** Called before the MAS execution with the args informed in .mas2j */
     @Override
     public void init(String[] args) {
-		arch = new HomeSecurityArch();
 		gui = new HomeSecurityGui(getListener());
 		gui.initComponents();
     }
+	
 	
 	private void clean(){
 		clearPercepts("robber");
@@ -54,6 +53,7 @@ public class HomeSecurityEnv extends Environment {
 		clearPercepts("alarm");
 		clearPercepts("central");
 		clearPercepts("latches");
+		removePercept("sensor2", Literal.parseLiteral("movement"));
 	}
 
 

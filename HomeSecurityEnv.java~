@@ -1,0 +1,117 @@
+// Environment code for project homesec.mas2j
+
+
+
+import jason.asSyntax.*;
+import jason.environment.*;
+import jason.asSyntax.parser.*;
+
+import java.util.logging.*;
+
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.WindowConstants;
+
+
+public class HomeSecurityEnv extends Environment {
+    private Logger logger = Logger.getLogger("homesec.mas2j."+HomeSecurityEnv.class.getName());
+	private HomeSecurityGui gui;
+	private static String text = "teszt";
+    /** Called before the MAS execution with the args informed in .mas2j */
+    @Override
+    public void init(String[] args) {
+		gui = new HomeSecurityGui();
+		gui.initComponents();
+		clearPercepts("robber");
+		clearPercepts("sensor2");
+		clearPercepts("sensor1");
+		clearPercepts("alarm");
+		clearPercepts("central");
+		clearPercepts("latches");
+
+		
+    }
+
+
+    @Override
+    public boolean executeAction(String agName, Structure action) {
+
+        logger.info("executing: "+action+", but not implemented!");
+
+        if (action.equals(Literal.parseLiteral("isThereMovement"))) { // you may improve this condition
+			return true;
+        }
+		String s;
+		if(text.equals("teszt")){
+			s="kek";
+		}
+		else {
+			s="teszt";
+		}
+		text =s;
+		
+		addPercept("latches", Literal.parseLiteral(s));
+        return false; // the action was executed with success
+    }
+
+
+
+    /** Called before the end of MAS execution */
+
+    @Override
+
+    public void stop() {
+
+        super.stop();
+
+    }
+}
+
+class HomeSecurityGui extends JFrame{
+    	public HomeSecurityGui(){
+    		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+    		setSize(new Dimension(300, 300));
+    		setResizable(false);
+    	}
+    	FlowLayout layout;
+        JButton ok;
+        JTextField ctext;
+        JTextField ptext;
+    	public void initComponents() {
+        	layout = new FlowLayout();
+
+    	    this.setLayout(layout);
+    	    
+    	    ok =  new JButton("next step");
+    	    ok.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent arg0) {
+					
+				}
+    		});
+    	    ctext = new JTextField();
+    	    ctext.setPreferredSize(new Dimension(100, 24));
+    	    ptext = new JTextField();
+    	    ptext.setPreferredSize(new Dimension(100, 24));
+			this.add(new JLabel("Command for the pursued car"));
+    	    this.add(ptext);
+    	    this.add(new JLabel("Command for the police-car"));
+    	    this.add(ctext);
+    	    this.add(ok);
+            setVisible(true);
+            repaint();
+        }
+    }
+
+

@@ -17,12 +17,20 @@
 					.send(alarm, tell , alarmon).
 
 +!notifyPolice <- .print("central notifies the police!"); 
-				  .wait(2000); 
+				  !waitForPolice; 
 				  .send(alarm, tell, alarmoff);
 				  .abolish(sensor1movement); 
 				  .abolish(sensor2movement);
-				  .send(robber, achieve, caught).
+				  .send(robber, achieve, handleNext).
 
++!waitForPolice <-  wait_for_police;
+					.print("5 sec till robber moves"); .wait(1000);  
+					.print("4 sec till robber moves"); .wait(1000);
+					.print("3 sec till robber moves"); .wait(1000);
+					.print("2 sec till robber moves"); .wait(1000);
+					.print("1 sec till robber moves"); .wait(1000);
+					police_round_done.
+				  
 +sensor1nomovement : sensor1movement <- .send(latches, tell, open); 
 										.send(sensor1, tell, tornofflights); 
 										.print("you can turn down the lights"); 

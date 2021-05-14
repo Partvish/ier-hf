@@ -39,7 +39,7 @@ public class HomeSecurityEnv extends Environment {
     /** Called before the MAS execution with the args informed in .mas2j */
     @Override
     public void init(String[] args) {
-		gui = new HomeSecurityGui(getListener());
+		gui = new HomeSecurityGui(getOkListener(), getPoliceListener());
 		gui.initComponents();
     }
 	
@@ -59,12 +59,20 @@ public class HomeSecurityEnv extends Environment {
 
         logger.info(TEXT);
 
-        if (action.equals(Literal.parseLiteral("robber_caught"))) { // you may improve this condition
+        if (action.equals(Literal.parseLiteral("robber_done"))) { // you may improve this condition
 			gui.getButton().setEnabled(true);
 			return true;
         }
+		if(action.equals(Literal.parseLiteral("wait_for_police"))){
+			gui.getPoliceButton().setEnabled(true);
+			return true;
+		}
+		if(action.equals(Literal.parseLiteral("police_round_done"))){
+			gui.getPoliceButton().setEnabled(false);
+			return true;
+		}
 
-        return false; // the action was executed with success
+        return true; // the action was executed with success
     }
 
 
@@ -79,7 +87,7 @@ public class HomeSecurityEnv extends Environment {
 
     }
 	
-		public ActionListener getListener(){
+	public ActionListener getOkListener(){
 		return new ActionListener() {public void actionPerformed(ActionEvent e) {
                 clean();
                 Literal goal = ASSyntax.createLiteral("restart");
@@ -97,8 +105,20 @@ public class HomeSecurityEnv extends Environment {
 						break;
 				}
 				addPercept("robber", Literal.parseLiteral(s));
+				addPercept("sensor1", Literal.parseLiteral("reset"));
+				addPercept("sensor2", Literal.parseLiteral("reset"));
 				gui.getButton().setEnabled(false);
             }
+		};
+		
+	}
+	
+	public ActionListener getPoliceListener(){
+		return new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+					addPercept("robber", Literal.parseLiteral("caught"));
+					gui.getPoliceButton().setEnabled(false);
+			}
 		};
 	}
 }
@@ -109,17 +129,21 @@ class SelectorOption{
 }
 
 class HomeSecurityGui extends JFrame{
-	private ActionListener actionListener;
-    	public HomeSecurityGui(ActionListener a){
+	private ActionListener okActionListener;
+	private ActionListener policeActionListener;
+	
+    	public HomeSecurityGui(ActionListener a, ActionListener p){
     		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     		setSize(new Dimension(300, 300));
     		setResizable(false);
-			actionListener = a;
+			okActionListener = a;
+			policeActionListener = p;
     	}
     	FlowLayout layout;
-        JButton ok;
-        JTextField ctext;
-        JTextField ptext;
+		
+        JButton bOk;
+		JButton bPolice;
+		
 		JList<String> optionsList;
     	public void initComponents() {                                                                               
         	layout = new FlowLayout();
@@ -141,19 +165,25 @@ class HomeSecurityGui extends JFrame{
 			});
     	    this.setLayout(layout);
     	    
-    	    ok =  new JButton("next step");
-    	    ok.addActionListener(actionListener);
-			ok.setEnabled(false);
+    	    bOk =  new JButton("Reset");
+    	    bOk.addActionListener(okActionListener);
+			bOk.setEnabled(false);
+			bPolice = new JButton("Police arrived");
+			bPolice.setEnabled(false);
+			bPolice.addActionListener(policeActionListener);
     	    optionsList.setPreferredSize(new Dimension(280,100));
 			this.add(optionsList);
-    	    this.add(ok);
-			
+    	    this.add(bOk);
+			this.add(bPolice);
             setVisible(true);
             repaint();
         }
 		
 		public JButton getButton(){
-			return ok;
+			return bOk;
+		}
+		public JButton getPoliceButton(){
+			return bPolice;
 		}
     }
 

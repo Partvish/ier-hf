@@ -1,5 +1,5 @@
 /* Initial beliefs and rules */
-trigger_sensor2.
+trigger_sensor1.
 /* Initial goals */
 !start.
 
@@ -19,11 +19,17 @@ trigger_sensor2.
 +!caught <- .print("robber got caught by the police"); 
 			 .abolish(trigger_sensor1);
 			 .abolish(trigger_sensor2);
-			 .abolish(restart);
 			 .send(sensor1, tell, reset);
 			 .send(sensor2, tell, reset);
-			 robber_caught. 
+			 robber_done. 
 
-+restart <- .print("Simulation restarted"); !breaking.
++restart <- .abolish(caught); .abolish(won); .print("Simulation restarted"); !breaking.
 
++!handleNext: caught <- !caught; .abolish(restart).
+
++!handleNext: not caught & trigger_sensor1 <- .abolish(trigger_sensor1); +trigger_sensor2; !breaking.
+
++!handleNext: not caught & trigger_sensor2 <- .abolish(trigger_sensor2); +won.
+
++won <- .print("robber got away with your valuables"); .abolish(restart); robber_done.
 

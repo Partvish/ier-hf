@@ -17,7 +17,8 @@
 			   .send(central, tell, sensor1nomovement); 
 			   .abolish(movement).
 				
-+turnonlights <- .printf("lights turned on"); 
++turnonlights <- .printf("lights turned on");
+				 .send(central, achieve, notifyPolice); 
 				 .abolish(turnofflights).
 				 
 +turnofflights : not turnonlights <- .print("lights turned off").

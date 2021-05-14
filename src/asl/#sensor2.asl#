@@ -6,6 +6,7 @@
 
 !start.
 
+/* Plans*/
 
 +!start : true <- .print("sensor2 started...").
 +movement <- .send(central, tell , sensor2movement); 

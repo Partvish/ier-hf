@@ -17,7 +17,8 @@ MAS homesec {
 
     environment: HomeSecurityEnv
 
-    agents: central;
+    agents: 
+		central;
         sensor1;
 		sensor2;
 		alarm;

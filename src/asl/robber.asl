@@ -1,11 +1,11 @@
-// Agent sample_agent in project homesec
-
 /* Initial beliefs and rules */
 
 /* Initial goals */
 
 !start.
+
 !breaking.
+
 /* Plans */
 
 +!start : true <- .print("robber started...").

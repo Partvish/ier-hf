@@ -104,9 +104,10 @@ public class HomeSecurityEnv extends Environment {
 						s= "trigger_sensor1";
 						break;
 				}
-				addPercept("robber", Literal.parseLiteral(s));
+
 				addPercept("sensor1", Literal.parseLiteral("reset"));
 				addPercept("sensor2", Literal.parseLiteral("reset"));
+				addPercept("robber", Literal.parseLiteral(s));
 				gui.getButton().setEnabled(false);
             }
 		};

@@ -1,5 +1,3 @@
-// Agent sample_agent in project homesec
-
 /* Initial beliefs and rules */
 
 /* Initial goals */
@@ -9,9 +7,15 @@
 /* Plans*/
 
 +!start : true <- .print("sensor2 started...").
-+movement <- .send(central, tell , sensor2movement); 
-			 .print("sensor 2 detected movement"); 
-			 .abolish(movement).
-+nomovement <-  .print(" s2 no movement detected");
-				.send(central, tell , sensor2nomovement); 
-				.abolish(movement).
+
++movement <- .print("sensor 2 tells central : sensor2 movement!");
+			 .send(central, tell , sensor2movement);
+			 .abolish(nomovement);
+			 .abolish(reset).
+			 
+			 
++nomovement <- .print("sensor 2 tells central : sensor2 no movement!");
+			   .send(central, tell, sensor2nomovement); 
+			   .abolish(movement).
+			   
++reset <- .abolish(movement); .abolish(nomovement).

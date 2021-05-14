@@ -8,13 +8,13 @@
 
 +!start : true <- .print("sensor1 started...").
 
-+movement <- .send(central, tell , sensor1movement); 
-			 .print("sensor 1 detected movement"); 
-			 .abolish(nomovement) .
++movement <- .print("sensor 1 tells central : sensor1 movement!");
+			 .send(central, tell , sensor1movement);
+			 .abolish(nomovement).
 			 
-+nomovement <-  .print("s1 nincs mozgas"); 
-				.send(central,tell,sensor1nomovement); 
-				.abolish(movement).
++nomovement <- .print("sensor 1 tells central : sensor1 no movement!"); 
+			   .send(central, tell, sensor1nomovement); 
+			   .abolish(movement).
 				
 +turnonlights <- .printf("lights turned on"); 
 				 .abolish(turnofflights).

@@ -31,13 +31,11 @@ import javax.swing.JList;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-
-
 public class HomeSecurityEnv extends Environment {
     private Logger logger = Logger.getLogger("homesec.mas2j."+HomeSecurityEnv.class.getName());
 	private HomeSecurityGui gui;
 	
-	public static String TEXT= "Tresspassing";
+	public static String TEXT= SelectorOption.SensorInside;
     /** Called before the MAS execution with the args informed in .mas2j */
     @Override
     public void init(String[] args) {
@@ -53,14 +51,13 @@ public class HomeSecurityEnv extends Environment {
 		clearPercepts("alarm");
 		clearPercepts("central");
 		clearPercepts("latches");
-		removePercept("sensor2", Literal.parseLiteral("movement"));
 	}
 
 
     @Override
     public boolean executeAction(String agName, Structure action) {
 
-        logger.info("executing: "+action+", but not implemented!");
+        logger.info(TEXT);
 
         if (action.equals(Literal.parseLiteral("robber_caught"))) { // you may improve this condition
 			gui.getButton().setEnabled(true);
@@ -87,13 +84,29 @@ public class HomeSecurityEnv extends Environment {
                 clean();
                 Literal goal = ASSyntax.createLiteral("restart");
                 addPercept("robber", goal);
-				logger.info(TEXT);
+				String s="";
+				switch(TEXT){
+					case SelectorOption.SensorInside:
+						s = "trigger_sensor2";
+						break;
+					case SelectorOption.SensorOutside:
+						s= "trigger_sensor1";
+						break;
+					default:
+						s= "trigger_sensor1";
+						break;
+				}
+				addPercept("robber", Literal.parseLiteral(s));
 				gui.getButton().setEnabled(false);
             }
 		};
 	}
 }
 
+class SelectorOption{
+	public static final String SensorOutside = "Tresspassing";
+	public static final String SensorInside = "Breaking and Entering";
+}
 
 class HomeSecurityGui extends JFrame{
 	private ActionListener actionListener;
@@ -108,11 +121,11 @@ class HomeSecurityGui extends JFrame{
         JTextField ctext;
         JTextField ptext;
 		JList<String> optionsList;
-    	public void initComponents() {
+    	public void initComponents() {                                                                               
         	layout = new FlowLayout();
 			DefaultListModel<String> listModel = new DefaultListModel<>();
-			listModel.addElement("Tresspassing");
-			listModel.addElement("Breaking and entering");
+			listModel.addElement(SelectorOption.SensorOutside);
+			listModel.addElement(SelectorOption.SensorInside);
 			
 			optionsList = new JList<>(listModel);
 			//optionsList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
